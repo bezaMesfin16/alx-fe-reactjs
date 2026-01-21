@@ -1,30 +1,30 @@
-import React from "react";
-import { useRecipeStore } from "./recipeStore";
+import React, { useEffect } from 'react';
+import { useRecipeStore } from '../store/recipeStore';
+import { Link } from 'react-router-dom';
 
 const RecommendationsList = () => {
-  const { recommendations, generateRecommendations } = useRecipeStore(
-    (state) => ({
-      recommendations: state.recommendations,
-      generateRecommendations: state.generateRecommendations,
-    })
+  const recommendations = useRecipeStore((state) => state.recommendations);
+  const generateRecommendations = useRecipeStore(
+    (state) => state.generateRecommendations
   );
 
-  React.useEffect(() => {
-    generateRecommendations(); // Generate recommendations on component mount
+  useEffect(() => {
+    generateRecommendations();
   }, [generateRecommendations]);
 
   return (
-    <div>
-      <h2>Recommended Recipes</h2>
+    <div className="mt-6">
+      <h2 className="text-xl font-bold mb-2">Recommended for You</h2>
       {recommendations.length > 0 ? (
         recommendations.map((recipe) => (
-          <div key={recipe.id}>
-            <h3>{recipe.title}</h3>
-            <p>{recipe.description}</p>
+          <div key={recipe.id} className="p-3 border rounded mb-2">
+            <Link to={`/recipe/${recipe.id}`} className="text-green-600 hover:underline">
+              {recipe.title}
+            </Link>
           </div>
         ))
       ) : (
-        <p>No recommendations available.</p>
+        <p>No recommendations yet. Add some favorites!</p>
       )}
     </div>
   );
